@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace IdentityServer.Attributes
 {
+    // TODO: I need to refactor this class
     public class CheckHeaderForApiKeyAttribute : TypeFilterAttribute
     {
         public CheckHeaderForApiKeyAttribute(): base(typeof(CheckHeaderForApiKeyAttribute))
