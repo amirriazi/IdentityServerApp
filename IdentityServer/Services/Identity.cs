@@ -56,7 +56,6 @@ namespace IdentityServer.Services
                     new Claim(ClaimTypes.NameIdentifier,Convert.ToString(UserId)),
                     new Claim(JwtRegisteredClaimNames.Nbf, new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString()),
                     new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.Now.AddHours(10)).ToUnixTimeSeconds().ToString()),
-                    new Claim("Application", "ir.simpay.Simsell"),
                 };
 
                 UserRoleList.ForEach(role =>

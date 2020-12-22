@@ -21,5 +21,14 @@ namespace IdentityServer.Data
 
             return ExecuteStoredProcedure(storedProcedureName, sqlParameters);
         }
+
+        public QueryResult GetAllRoles( Guid apiKey)
+        {
+            var sqlParameters = new List<SqlParameter>();
+            var storedProcedureName = "ud_prc_GetAllRoles";
+            sqlParameters.Add(new SqlParameter { SqlDbType = SqlDbType.UniqueIdentifier, ParameterName = "@apiKey", Value = apiKey });
+
+            return ExecuteStoredProcedure(storedProcedureName, sqlParameters);
+        }
     }
 }

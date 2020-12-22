@@ -26,8 +26,15 @@ namespace IdentityServer.Controllers
             var result = new GeneralResult();
             do
             {
+                var apiKey = Request.Headers["api-key"];
+                if (String.IsNullOrEmpty(apiKey))
+                {
+                    result.SetError("api-key is not provided in header");
+                    break;
+                }
                 _role.RoleInfo = new RoleModel()
                 {
+                    ApiKey = Guid.Parse(apiKey),
                     RoleName = info.roleName
                 }; 
 
@@ -40,6 +47,33 @@ namespace IdentityServer.Controllers
                 {
                     roleId= _role.RoleInfo.RoleId
                 };
+            } while (false);
+            return result;
+        }
+
+        [HttpGet]
+        public GeneralResult GetAllRoles()
+        {
+            var result = new GeneralResult();
+            do
+            {
+                var apiKey = Request.Headers["api-key"];
+                if (String.IsNullOrEmpty(apiKey))
+                {
+                    result.SetError("api-key is not provided in header");
+                    break;
+                }
+                _role.RoleInfo = new RoleModel()
+                {
+                    ApiKey = Guid.Parse(apiKey),
+                };
+
+                result = _role.GetAallRoles();
+                if (result.HasError)
+                {
+                    break;
+                }
+                
             } while (false);
             return result;
         }
