@@ -4,6 +4,6 @@ namespace IdentityServer.Services
 {
     public interface ISMS
     {
-        GeneralResult SendMessage(string[] mobiles, string text);
+        GeneralResult<dynamic> SendMessage(string[] mobiles, string text);
     }
 }

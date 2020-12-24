@@ -6,29 +6,41 @@ using IdentityServer.Services;
 using IdentityServer.Models;
 using Microsoft.AspNetCore.Mvc;
 using SharedLibrary;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc.Filters;
+using IdentityServer.Attributes;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IdentityServer.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UsersController : Controller
     {
         private readonly Users _users;
+        private readonly Claim _claim;
 
-        public UsersController(Users users)
+        private readonly AuthorizationFilterContext _context;
+
+        public UsersController(Users users, Claim claim, AuthorizationFilterContext context)
         {
             _users= users;
+            _claim = claim;
+            _context = context;
         }
 
         [Route("AddUser")]
         [HttpPost]
-        public GeneralResult AddUser([FromBody] wsInputUserInfo info)
+        public GeneralResult<dynamic> AddUser([FromBody] wsInputUserInfo info)
         {
 
-            var result = new GeneralResult();
+
+            var result = new GeneralResult<dynamic>();
 
             do
             {
+
                 var apiKey = Request.Headers["api-key"];
                 if (String.IsNullOrEmpty(apiKey))
                 {
@@ -59,9 +71,9 @@ namespace IdentityServer.Controllers
         }
         [Route("addRole")]
         [HttpPost]
-        public GeneralResult AddRole([FromBody] wsInputUserRole info)
+        public GeneralResult<dynamic> AddRole([FromBody] wsInputUserRole info)
         {
-            var result = new GeneralResult();
+            var result = new GeneralResult<dynamic>();
             do
             {
                 var apiKey = Request.Headers["api-key"];
@@ -98,11 +110,12 @@ namespace IdentityServer.Controllers
         }
         [Route("{id}")]
         [HttpPut]
-        public GeneralResult EditUser(string id, [FromBody] wsInputUserInfo info)
+        public GeneralResult<dynamic> EditUser(string id, [FromBody] wsInputUserInfo info)
         {
-            var result = new GeneralResult();
+            var result = new GeneralResult<dynamic>();
             do
             {
+
                 var apiKey = Request.Headers["api-key"];
                 if (String.IsNullOrEmpty(apiKey))
                 {

@@ -10,9 +10,9 @@ namespace IdentityServer.Services
     public class SmsParsGreen : ISMS
     {
         
-        public GeneralResult SendMessage(string[] mobiles, string text)
+        public GeneralResult<dynamic> SendMessage(string[] mobiles, string text)
         {
-            var result = new GeneralResult();
+            var result = new GeneralResult<dynamic>();
             var msg = new Message(apiKey: "5221EB09-DA4A-4AF3-A4F9-0153C4D26C8A");
 
             var smsResult = msg.SendSms(text, mobiles);

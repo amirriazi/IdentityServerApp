@@ -16,9 +16,9 @@ namespace IdentityServer.Services
         const string PASSWORD = "P@ssw0rd";
         const string SMTP = "mail.padraholding.com";
 
-        public GeneralResult SendEmail(string toAddress, string Subject, string msgBody)
+        public GeneralResult<dynamic> SendEmail(string toAddress, string Subject, string msgBody)
         {
-            var result = new GeneralResult();
+            var result = new GeneralResult<dynamic>();
             MailMessage message = new MailMessage(SENDER_EMAIL, toAddress);
             message.Subject = Subject;
             message.Body = msgBody;

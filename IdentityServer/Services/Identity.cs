@@ -29,6 +29,8 @@ namespace IdentityServer.Services
 
         public bool IsValid { get; set; }
         public Guid ApiKey { get; set; }
+        public bool ApiIsMaster { get; set; }
+        public string ApiName { get; set; }
         public Guid UserId { get; set; }
         public string UserName{ get; set; }
         public string Password { get; set; }
@@ -41,7 +43,7 @@ namespace IdentityServer.Services
 
         private string generateToken()
         {
-            var result = new GeneralResult();
+            var result = new GeneralResult<dynamic>();
             do
             {
                 result = SetUserRoles();
@@ -54,6 +56,9 @@ namespace IdentityServer.Services
                 {
                     new Claim(ClaimTypes.Name, UserName),
                     new Claim(ClaimTypes.NameIdentifier,Convert.ToString(UserId)),
+                    new Claim("ApiName", ApiName),
+                    new Claim("ApiKey", Convert.ToString( ApiKey)),
+                    new Claim("IsMaster", Convert.ToString(ApiIsMaster)),
                     new Claim(JwtRegisteredClaimNames.Nbf, new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString()),
                     new Claim(JwtRegisteredClaimNames.Exp, new DateTimeOffset(DateTime.Now.AddHours(10)).ToUnixTimeSeconds().ToString()),
                 };
@@ -78,9 +83,9 @@ namespace IdentityServer.Services
             return "";
         }
 
-        public GeneralResult Authentication()
+        public GeneralResult<dynamic> Authentication()
         {
-            var result = new GeneralResult();
+            var result = new GeneralResult<dynamic>();
             do
             {
                 var dbResult = _sqlDatabase.Authenticate(UserName, Shared.HashPassword(Password), ApiKey);
@@ -98,13 +103,16 @@ namespace IdentityServer.Services
                 var rec = DS.Tables[0].Rows[0];
                 IsValid = (bool)rec["isValid"];
                 UserId = (Guid)rec["userId"];
+                ApiKey = (Guid)rec["apiKey"];
+                ApiName = (string)rec["apiName"];
+                ApiIsMaster = (bool)rec["isMaster"];
                 result.Message = "User Authentication has been sucessful.";
             } while (false);
             return result;
         }
-        public GeneralResult GetToken()
+        public GeneralResult<dynamic> GetToken()
         {
-            var result = new GeneralResult();
+            var result = new GeneralResult<dynamic>();
             do
             {
                 var token = generateToken();
@@ -114,9 +122,9 @@ namespace IdentityServer.Services
         }
 
 
-        private GeneralResult SetUserRoles()
+        private GeneralResult<dynamic> SetUserRoles()
         {
-            var result = new GeneralResult();
+            var result = new GeneralResult<dynamic>();
             do
             {
                 var dbResult = _sqlDatabase.GetUserRolesByUserId(UserId, ApiKey);
@@ -146,9 +154,9 @@ namespace IdentityServer.Services
             return result;
         }
 
-        public GeneralResult SetMobileVerificationCode()
+        public GeneralResult<dynamic> SetMobileVerificationCode()
         {
-            var result = new GeneralResult();
+            var result = new GeneralResult<dynamic>();
             do
             {
                 var dbResult = _sqlDatabase.ActivationCodeForMobil(Mobile, ApiKey);
@@ -175,9 +183,9 @@ namespace IdentityServer.Services
         }
 
 
-        public GeneralResult SetTokenByMobileVerificationCode()
+        public GeneralResult<dynamic> SetTokenByMobileVerificationCode()
         {
-            var result = new GeneralResult();
+            var result = new GeneralResult<dynamic>();
             do
             {
                 var dbResult = _sqlDatabase.AuthenticateByMobileVerificationCode(VerificationCode, ApiKey);
@@ -210,9 +218,9 @@ namespace IdentityServer.Services
             return result;
         }
 
-        public GeneralResult SetEmailVerificationCode()
+        public GeneralResult<dynamic> SetEmailVerificationCode()
         {
-            var result = new GeneralResult();
+            var result = new GeneralResult<dynamic>();
             do
             {
                 var dbResult = _sqlDatabase.ActivationCodeForEmail(Email, ApiKey);
@@ -235,9 +243,9 @@ namespace IdentityServer.Services
             return result;
         }
 
-        public GeneralResult SetTokenByEmailVerificationCode()
+        public GeneralResult<dynamic> SetTokenByEmailVerificationCode()
         {
-            var result = new GeneralResult();
+            var result = new GeneralResult<dynamic>();
             do
             {
                 var dbResult = _sqlDatabase.AuthenticateByEmailVerificationCode(VerificationCode, ApiKey);

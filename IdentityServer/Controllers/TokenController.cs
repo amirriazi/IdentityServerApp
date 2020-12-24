@@ -29,13 +29,13 @@ namespace IdentityServer.Controllers
         [Route("login")]
          
         [HttpPost]
-        public async Task<GeneralResult> Login( [FromBody] wsInputUserInfo info)
+        public async Task<GeneralResult<dynamic>> Login( [FromBody] wsInputUserInfo info)
         {
 
             //_email.SendEmail("nasser.karimi@padraholding.com", "Verification code from Padran Holding!", "HEllO THIS IS MY EMAIL");
 
 
-            var result = new GeneralResult();
+            var result = new GeneralResult<dynamic>();
             do
             {
                 var apiKey = Request.Headers["api-key"];
@@ -65,10 +65,10 @@ namespace IdentityServer.Controllers
 
         [Route("MobileActivationCode")]
         [HttpPost]
-        public async Task<GeneralResult> MobileActivationCode([FromBody] wsInputUserInfo info)
+        public async Task<GeneralResult<dynamic>> MobileActivationCode([FromBody] wsInputUserInfo info)
         {
       
-            var result = new GeneralResult();
+            var result = new GeneralResult<dynamic>();
             do
             {
                 var apiKey = Request.Headers["api-key"];
@@ -102,10 +102,10 @@ namespace IdentityServer.Controllers
 
         [Route("tokenByMobile")]
         [HttpPost]
-        public async Task<GeneralResult> TokenByMobile([FromBody] wsInputUserInfo info)
+        public async Task<GeneralResult<dynamic>> TokenByMobile([FromBody] wsInputUserInfo info)
         {
 
-            var result = new GeneralResult();
+            var result = new GeneralResult<dynamic>();
             do
             {
                 var apiKey = Request.Headers["api-key"];
@@ -130,11 +130,11 @@ namespace IdentityServer.Controllers
 
         [Route("EmailActivationCode")]
         [HttpPost]
-        public async Task<GeneralResult> EmailActivationCode([FromBody] wsInputUserInfo info)
+        public async Task<GeneralResult<dynamic>> EmailActivationCode([FromBody] wsInputUserInfo info)
         {
 
 
-            var result = new GeneralResult();
+            var result = new GeneralResult<dynamic>();
             do
             {
                 var apiKey = Request.Headers["api-key"];
@@ -166,10 +166,10 @@ namespace IdentityServer.Controllers
 
         [Route("tokenByEmail")]
         [HttpPost]
-        public async Task<GeneralResult> TokenByEmail([FromBody] wsInputUserInfo info)
+        public async Task<GeneralResult<dynamic>> TokenByEmail([FromBody] wsInputUserInfo info)
         {
 
-            var result = new GeneralResult();
+            var result = new GeneralResult<dynamic>();
             do
             {
                 var apiKey = Request.Headers["api-key"];

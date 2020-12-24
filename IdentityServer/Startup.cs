@@ -41,8 +41,10 @@ namespace IdentityServer
             services.AddSingleton<Identity>();
             services.AddSingleton<Users>();
             services.AddSingleton<Roles>();
-            services.AddControllers();
+            services.AddSingleton<Apis>();
 
+            services.AddControllers();
+            services.AddSwaggerGen();
 
             var securityKey = Encoding.UTF8.GetBytes(Configuration.GetValue<string>("SecretKey"));
             services.AddAuthentication(options =>
@@ -79,6 +81,12 @@ namespace IdentityServer
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             app.UseEndpoints(endpoints =>
             {

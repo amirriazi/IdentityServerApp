@@ -19,9 +19,9 @@ namespace IdentityServer.Services
             _sqlDatabase = sqlDatabase;
         }
 
-        public GeneralResult AddUser()
+        public GeneralResult<dynamic> AddUser()
         {
-            var result = new GeneralResult();
+            var result = new GeneralResult<dynamic>();
             do
             {
                 var hashedPassword = Shared.HashPassword(UserInfo.Password);
@@ -43,9 +43,9 @@ namespace IdentityServer.Services
             } while (false);
             return result;
         }
-        public GeneralResult EditUser()
+        public GeneralResult<dynamic> EditUser()
         {
-            var result = new GeneralResult();
+            var result = new GeneralResult<dynamic>();
             do
             {
                 var dbResult = _sqlDatabase.EditUser(UserInfo.UserId, UserInfo.UserName,  UserInfo.Email, UserInfo.Mobile);
@@ -67,9 +67,9 @@ namespace IdentityServer.Services
             return result;
         }
 
-        public GeneralResult AssignUserRole()
+        public GeneralResult<dynamic> AssignUserRole()
         {
-            var result = new GeneralResult();
+            var result = new GeneralResult<dynamic>();
             do
             {
                 var dbResult = _sqlDatabase.AssignUserRole(UserInfo.UserName, UserInfo.RoleName, UserInfo.ApiKey);
@@ -92,9 +92,9 @@ namespace IdentityServer.Services
 
         }
 
-        public GeneralResult GetUsers()
+        public GeneralResult<dynamic> GetUsers()
         {
-            var result = new GeneralResult();
+            var result = new GeneralResult<dynamic>();
             do
             {
                 var dbResult = _sqlDatabase.GetUsers(UserInfo.ApiKey);

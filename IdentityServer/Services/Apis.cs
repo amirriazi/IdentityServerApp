@@ -1,6 +1,6 @@
 ﻿using IdentityServer.Data;
-using SharedLibrary;
 using IdentityServer.Models;
+using SharedLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,23 +8,21 @@ using System.Threading.Tasks;
 
 namespace IdentityServer.Services
 {
-    public class Roles
+    public class Apis
     {
         private readonly SqlDatabase _sqlDatabase;
-
-        public RoleModel RoleInfo;
-
-        public Roles(SqlDatabase sqlDatabase)
+        public  ApiModel ApiInfo;
+        public Apis(SqlDatabase sqlDatabase)
         {
             _sqlDatabase = sqlDatabase;
         }
 
-        public GeneralResult<dynamic> AddRole()
+        public GeneralResult<dynamic> AddApi()
         {
             var result = new GeneralResult<dynamic>();
             do
             {
-                var dbResult = _sqlDatabase.InsertRole(RoleInfo.RoleName, RoleInfo.ApiKey);
+                var dbResult = _sqlDatabase.InsertApi(ApiInfo.ApiName);
                 if (dbResult.ReturnCode != 1 || dbResult.SPCode != 1)
                 {
                     result.SetError(dbResult.Text);
@@ -37,18 +35,18 @@ namespace IdentityServer.Services
                 }
                 var DS = Shared.DBNull(dbResult.DataSet);
                 var rec = DS.Tables[0].Rows[0];
-                RoleInfo.RoleId = (Guid)rec["roleId"];
-                result.Message = "User Addition has been sucessful.";
+                ApiInfo.ApiKey= (Guid)rec["apiKey"];
+                result.Message = "Api Addition has been sucessful.";
             } while (false);
             return result;
         }
 
-        public GeneralResult<dynamic> GetAallRoles()
+        public GeneralResult<dynamic> EditApi()
         {
             var result = new GeneralResult<dynamic>();
             do
             {
-                var dbResult = _sqlDatabase.GetAllRoles(RoleInfo.ApiKey);
+                var dbResult = _sqlDatabase.EditApi(ApiInfo.ApiKey, ApiInfo.ApiName);
                 if (dbResult.ReturnCode != 1 || dbResult.SPCode != 1)
                 {
                     result.SetError(dbResult.Text);
@@ -56,34 +54,37 @@ namespace IdentityServer.Services
                 }
                 if (dbResult.DataSet.Tables[0].Rows.Count <= 0)
                 {
-                    result.SetError("No Roles has been found!");
+                    result.SetError("Api Not Found!");
                     break;
                 }
                 var DS = Shared.DBNull(dbResult.DataSet);
+                var rec = DS.Tables[0].Rows[0];
+                ApiInfo.ApiKey= (Guid)rec["apiKey"];
+                result.Message = "Api Edition has been sucessful.";
+            } while (false);
+            return result;
+        }
 
-                var list = new List<RoleModel>();
-                for (int i = 0; i < DS.Tables[0].Rows.Count; i++)
+        public GeneralResult<dynamic> setMasterApi()
+        {
+            var result = new GeneralResult<dynamic>();
+            do
+            {
+                var dbResult = _sqlDatabase.setApiMaster(ApiInfo.ApiKey);
+                if (dbResult.ReturnCode != 1 || dbResult.SPCode != 1)
                 {
-                    var rec = DS.Tables[0].Rows[i];
-                    list.Add(new RoleModel
-                    {
-                        ApiKey = RoleInfo.ApiKey,
-                        RoleId = (Guid)rec["roleId"],
-                        RoleName = (string)rec["roleName"]
-                    });
-
+                    result.SetError(dbResult.Text);
+                    break;
                 }
-
-                result.Message = "Geting Roles for this api has been sucessful.";
-                result.Data = new
+                if (dbResult.DataSet.Tables[0].Rows.Count <= 0)
                 {
-                    list
-                };
+                    result.SetError("Api Not Found!");
+                    break;
+                }
+                result.Message = "Setting Api Master has been sucessful.";
             } while (false);
             return result;
         }
 
     }
-
-
 }
