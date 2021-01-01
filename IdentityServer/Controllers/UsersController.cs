@@ -13,26 +13,22 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace IdentityServer.Controllers
 {
-    [Authorize]
+    
     [ApiController]
     [Route("api/[controller]")]
     public class UsersController : Controller
     {
         private readonly Users _users;
-        private readonly Claim _claim;
+        
 
-        private readonly AuthorizationFilterContext _context;
-
-        public UsersController(Users users, Claim claim, AuthorizationFilterContext context)
+        public UsersController(Users users)
         {
             _users= users;
-            _claim = claim;
-            _context = context;
+            
         }
 
-        [Route("AddUser")]
-        [HttpPost]
-        public GeneralResult<dynamic> AddUser([FromBody] wsInputUserInfo info)
+        [HttpPost("AddUser")]
+        public GeneralResult<dynamic> AddUser([FromBody] wsUserInfo.Input info)
         {
 
 
@@ -69,11 +65,10 @@ namespace IdentityServer.Controllers
             } while (false);
             return result;
         }
-        [Route("addRole")]
-        [HttpPost]
-        public GeneralResult<dynamic> AddRole([FromBody] wsInputUserRole info)
+        [HttpPost("addRole")]
+        public GeneralResult<wsUserRole.Output> AddRole([FromBody] wsUserRole.Input info)
         {
-            var result = new GeneralResult<dynamic>();
+            var result = new GeneralResult<wsUserRole.Output>();
             do
             {
                 var apiKey = Request.Headers["api-key"];
@@ -95,12 +90,13 @@ namespace IdentityServer.Controllers
                     RoleName = info.roleName
                 };
 
-                result = _users.AssignUserRole();
-                if (result.HasError)
+                var apiResult = _users.AssignUserRole();
+                if (apiResult.HasError)
                 {
+                    result.SetError(apiResult.Message);
                     break;
                 }
-                result.Data = new
+                result.Data = new wsUserRole.Output()
                 {
                     userId = _users.UserInfo.UserId
                 };
@@ -108,9 +104,8 @@ namespace IdentityServer.Controllers
             return result;
 
         }
-        [Route("{id}")]
-        [HttpPut]
-        public GeneralResult<dynamic> EditUser(string id, [FromBody] wsInputUserInfo info)
+        [HttpPost("{id}")]
+        public GeneralResult<dynamic> EditUser(string id, [FromBody] wsUserInfo.Input info)
         {
             var result = new GeneralResult<dynamic>();
             do
@@ -128,7 +123,8 @@ namespace IdentityServer.Controllers
                     result.SetError("User Id should be provided!");
                     break;
                 }
-                var r = Guid.TryParse(id, out var userId);
+                var userId = Guid.Parse(id);
+
                 info.userId = userId;
                 _users.UserInfo = new UserModel
                 {
@@ -148,6 +144,37 @@ namespace IdentityServer.Controllers
                 {
                     userId = _users.UserInfo.UserId
                 };
+            } while (false);
+            return result;
+        }
+
+        
+        [HttpGet]
+        public GeneralResult<dynamic> GetAllUser()
+        {
+            var result = new GeneralResult<dynamic>();
+            do
+            {
+
+                var apiKey = Request.Headers["api-key"];
+                if (String.IsNullOrEmpty(apiKey))
+                {
+                    result.SetError("api-key is not provided in header");
+                    break;
+                }
+
+                _users.UserInfo = new UserModel()
+                {
+                    ApiKey = Guid.Parse(apiKey)
+                };
+
+                var apiResult = _users.GetUsers();
+                if (apiResult.HasError)
+                {
+                    result.SetError(apiResult.Message);
+                    break;
+                }
+                result.Data = apiResult.Data;
             } while (false);
             return result;
         }

@@ -5,16 +5,15 @@ using System.Threading.Tasks;
 
 namespace IdentityServer.Controllers
 {
-    public class wsApiInfo
+    public class wsRoleInfo
     {
         public class Input
         {
-            public Guid apiKey { get; set; }
-            public string apiName { get; set; }
+            public string roleName { get; set; }
         }
         public class Output
         {
-            public Guid apiKey { get; set; }
+            public Guid roleId { get; set; }
         }
     }
 }

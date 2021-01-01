@@ -21,9 +21,9 @@ namespace IdentityServer.Controllers
         }
         [Route("AddRole")]
         [HttpPost]
-        public GeneralResult<dynamic> AddRole([FromBody] wsInputRoleInfo info)
+        public GeneralResult<wsRoleInfo.Output> AddRole([FromBody] wsRoleInfo.Input info)
         {
-            var result = new GeneralResult<dynamic>();
+            var result = new GeneralResult<wsRoleInfo.Output>();
             do
             {
                 var apiKey = Request.Headers["api-key"];
@@ -38,12 +38,13 @@ namespace IdentityServer.Controllers
                     RoleName = info.roleName
                 }; 
 
-                result = _role.AddRole();
-                if (result.HasError)
+                var apiResult = _role.AddRole();
+                if (apiResult.HasError)
                 {
+                    result.SetError(apiResult.Message);
                     break;
                 }
-                result.Data = new
+                result.Data = new wsRoleInfo.Output()
                 {
                     roleId= _role.RoleInfo.RoleId
                 };

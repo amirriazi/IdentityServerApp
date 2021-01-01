@@ -44,7 +44,12 @@ namespace IdentityServer
             services.AddSingleton<Apis>();
 
             services.AddControllers();
+            //Swagger
             services.AddSwaggerGen();
+            services.ConfigureSwaggerGen(options =>
+            {
+                options.CustomSchemaIds(x => x.FullName);
+            });
 
             var securityKey = Encoding.UTF8.GetBytes(Configuration.GetValue<string>("SecretKey"));
             services.AddAuthentication(options =>

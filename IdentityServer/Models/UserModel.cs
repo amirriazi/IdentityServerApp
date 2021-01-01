@@ -9,6 +9,7 @@ namespace IdentityServer.Models
     {
         public Guid UserId { get; set; }
         public Guid ApiKey { get; set; }
+        public string ApiName { get; set; }
         public string UserName { get; set; }
 
         public string Password { get; set; }

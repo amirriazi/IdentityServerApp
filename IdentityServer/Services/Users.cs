@@ -116,13 +116,16 @@ namespace IdentityServer.Services
                     List.Add(new UserModel
                     {
                         ApiKey= (Guid)rec["apiKey"],
+                        ApiName = (string)rec["apiName"],
                         UserId = (Guid)rec["userId"],
                         UserName = (string)rec["userName"],
                         Email = (string)rec["email"],
                         Mobile = (string)rec["mobile"],
+                       
+                        
                     }); ;
                 }
-                
+                result.Data = List;
                 result.Message = "Assigning the role to this user was sucessful.";
             } while (false);
             return result;

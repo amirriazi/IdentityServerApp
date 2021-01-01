@@ -12,7 +12,7 @@ using IdentityServer.Services.objects;
 
 namespace IdentityServer.Controllers
 {
-    
+   
     [ApiController]
     [Route("api/[controller]")]
     public class ApiController : Controller
@@ -24,14 +24,12 @@ namespace IdentityServer.Controllers
             _api= apis;
         }
 
-        [Authorize]
-        [IsMasterApi]
+       
         [HttpPost("AddApi")]
-        public GeneralResult<wsOutputApiInfo> Add([FromBody] wsInputApiInfo info)
+        public GeneralResult<wsApiInfo.Output> Add([FromBody] wsApiInfo.Input info)
         {
 
-
-            var result = new GeneralResult<wsOutputApiInfo>();
+            var result = new GeneralResult<wsApiInfo.Output>();
 
             do
             {
@@ -46,7 +44,7 @@ namespace IdentityServer.Controllers
                     result.SetError(apiResult.Message);
                     break;
                 }
-                result.Data = new wsOutputApiInfo()
+                result.Data = new wsApiInfo.Output()
                 {
                     apiKey= _api.ApiInfo.ApiKey
                 };
@@ -55,9 +53,9 @@ namespace IdentityServer.Controllers
         }
         [Route("{id}")]
         [HttpPut]
-        public GeneralResult<wsOutputApiInfo> EditApi(string id, [FromBody] wsInputApiInfo info)
+        public GeneralResult<wsApiInfo.Output> EditApi(string id, [FromBody] wsApiInfo.Input info)
         {
-            var result = new GeneralResult<wsOutputApiInfo>();
+            var result = new GeneralResult<wsApiInfo.Output>();
             do
             {
 
@@ -81,7 +79,7 @@ namespace IdentityServer.Controllers
                     result.SetError(apiResult.Message);
                     break;
                 }
-                result.Data = new wsOutputApiInfo
+                result.Data = new wsApiInfo.Output
                 {
                     apiKey= _api.ApiInfo.ApiKey
                 };
@@ -90,11 +88,10 @@ namespace IdentityServer.Controllers
         }
 
         [Route("setMaster")]
-        [IsMasterApi()]
         [HttpPost]
-        public GeneralResult<wsOutputApiInfo> SetMaster([FromBody] wsInputApiInfo info)
+        public GeneralResult<wsApiInfo.Output> SetMaster([FromBody] wsApiInfo.Input info)
         {
-            var result = new GeneralResult<wsOutputApiInfo>();
+            var result = new GeneralResult<wsApiInfo.Output>();
             do
             {
 
@@ -109,7 +106,7 @@ namespace IdentityServer.Controllers
                     result.SetError(apiResult.Message);
                     break;
                 }
-                result.Data = new wsOutputApiInfo()
+                result.Data = new wsApiInfo.Output()
                 {
                     apiKey= _api.ApiInfo.ApiKey
                 };
